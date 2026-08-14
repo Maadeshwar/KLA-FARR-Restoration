@@ -1,0 +1,17 @@
+# Dataset and generated images (too large for GitHub)
+Dataset/
+Image/
+
+# Model checkpoints
+checkpoints/
+*.pt
+*.pth
+
+# Python caches
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
