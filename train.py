@@ -16,6 +16,7 @@ import sys
 import argparse
 import random
 import time
+import csv
 import numpy as np
 import torch
 import torch.nn as nn
@@ -185,6 +186,11 @@ def main():
 
     os.makedirs(args.save_dir, exist_ok=True)
     best_psnr = 0.0
+    
+    log_file = os.path.join(args.save_dir, 'training_log.csv')
+    with open(log_file, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Epoch', 'Train_Loss', 'Val_Loss', 'PSNR', 'SSIM', 'LR', 'Time_s'])
 
     print(f'\n{"="*80}')
     print(f'{"Epoch":>6} | {"Train Loss":>10} | {"Val Loss":>10} | {"PSNR (dB)":>10} | {"SSIM":>8} | {"LR":>10} | {"Time":>6}')
@@ -201,6 +207,10 @@ def main():
         lr_now = optimizer.param_groups[0]['lr']
 
         print(f'{epoch:6d} | {train_loss:10.6f} | {val_loss:10.6f} | {val_psnr:10.2f} | {val_ssim:8.4f} | {lr_now:10.2e} | {elapsed:5.1f}s')
+        
+        with open(log_file, 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([epoch, train_loss, val_loss, val_psnr, val_ssim, lr_now, elapsed])
 
         # Save best model based on PSNR (primary metric)
         if val_psnr > best_psnr:
