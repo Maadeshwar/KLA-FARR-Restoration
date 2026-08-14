@@ -1,9 +1,9 @@
 <div align="center">
 
-# KLA Semiconductor Image Restoration Challenge
+# Frequency-Aware Nonlinear Activation Free Network for Semiconductor Image Restoration
 
-### *A Production-Grade, Frequency-Aware Deep Learning Pipeline*
-### *for Simultaneous Speckle Denoising & 2x Super-Resolution*
+### *Simultaneous Multiplicative Speckle Denoising and 2x Spatial Super-Resolution*
+### *via Fourier-Domain Optimization and Geometric Test-Time Augmentation*
 
 <br>
 
