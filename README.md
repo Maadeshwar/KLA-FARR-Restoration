@@ -348,6 +348,26 @@ python evaluate.py \
 
 ## Repository Structure & Pipeline Architecture
 
+```text
+Semicon/
+|-- README.md
+|-- requirements.txt
+|
+|-- train.py                   <- Training engine (AMP + Checkpointing)
+|-- evaluate.py                <- Primary inference engine (8-fold TTA)
+|-- process_custom.py          <- Sandbox inference for real-world chips
+|-- visualize_test.py          <- Generates side-by-side presentation visuals
+|
+|-- src/
+|   |-- dataset.py             <- PyTorch Dataset, Augmentations, Splitting
+|   |-- model.py               <- NAFNet-SR, SimpleGate, PixelShuffle
+|   |-- loss.py                <- Charbonnier, SSIM, Focal Frequency Loss
+|
+|-- checkpoints/               <- Trained weights (best_model.pt)
+|-- results/                   <- .npy test predictions & training curves
+|-- Chip_Test/                 <- Custom industry image evaluations
+```
+
 The repository is modularly designed to separate mathematical architecture, data processing, and execution logic.
 
 ### 1. Execution Scripts (The Pipeline)
