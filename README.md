@@ -346,37 +346,33 @@ python evaluate.py \
 
 ---
 
-## Repository Structure
+## Repository Structure & Pipeline Architecture
 
-```
-Semicon/
-|
-|-- README.md                  <- You are here
-|-- requirements.txt           <- All dependencies
-|
-|-- train.py                   <- Full training pipeline with AMP + logging
-|-- evaluate.py                <- Inference engine with 8-fold TTA
-|
-|-- src/
-|   |-- dataset.py               <- Data loading, augmentation, zero-leakage split
-|   |-- model.py                 <- NAFNet-SR architecture (SimpleGate, PixelShuffle)
-|   |-- loss.py                  <- Charbonnier + SSIM + Focal Frequency Loss
-|
-|-- Dataset/
-|   |-- train/train/
-|   |   |-- GT/                  <- 3,200 clean 256x256 ground truth images
-|   |   |-- NoisyLR/             <- 3,200 degraded 128x128 noisy input images
-|   |-- NoisyLR/                 <- 400 test images for submission
-|
-|-- Image/
-|   |-- Ground Truth/            <- Visual PNGs of training GT
-|   |-- Noisy/                   <- Visual PNGs of training NoisyLR
-|   |-- test/                    <- Visual PNGs of test input images
-|
-|-- checkpoints/
-    |-- best_model.pt            <- Highest validation PSNR checkpoint
-    |-- final_model.pt           <- Final epoch checkpoint
-```
+The repository is modularly designed to separate mathematical architecture, data processing, and execution logic.
+
+### 1. Execution Scripts (The Pipeline)
+These are the entry points for the pipeline. They orchestrate the models and data loaders.
+- **`train.py`**: The training engine. It initializes the model, applies the Triple-Threat Loss function, and runs the PyTorch AMP (Automatic Mixed Precision) loop. It automatically saves the best weights to `checkpoints/`.
+- **`evaluate.py`**: The primary inference engine for the official Hackathon submission. It reads the 400 `.npy` inputs, applies the 8-fold Test-Time Augmentation (TTA), and saves the final 256x256 `.npy` arrays.
+- **`process_custom.py`**: A specialized local inference script for testing custom, real-world industry images. It reads `.png` inputs from `Chip_Test/Input`, runs the CPU inference, and generates side-by-side comparative graphics.
+- **`visualize_test.py`**: A utility script that converts the raw mathematical `.npy` arrays into human-readable side-by-side `.png` images for presentation purposes.
+
+### 2. Source Code (`src/`)
+This folder contains the core mathematical and architectural logic.
+- **`src/model.py`**: Defines the `NAFNet-SR` architecture, including the `SimpleGate` and `PixelShuffle` mechanisms. Both `train.py` and `evaluate.py` import this to build the neural network.
+- **`src/dataset.py`**: Defines the PyTorch `Dataset` and `DataLoader` classes. It handles reading the 3,200 arrays, injecting deterministic spatial augmentations (flips/rotations), and managing the 90/10 zero-leakage training split.
+- **`src/loss.py`**: Contains the custom implementations for Charbonnier Loss, Structural Similarity (SSIM) Loss, and Focal Frequency Loss (Fourier-domain optimization). 
+
+### 3. Data & Outputs
+These directories handle the input data and the resulting models.
+- **`checkpoints/`**: Stores `best_model.pt` (used by `evaluate.py`) and `training_log.csv` (used for plotting loss curves).
+- **`Dataset/`**: (Ignored in Git) Contains the raw 3,200 KLA training pairs and the 400 test images.
+- **`results/`**: Contains the final 400 `.npy` test predictions, side-by-side `.png` graphics, and the matplotlib training curves.
+- **`Chip_Test/`**: A sandbox directory for evaluating custom images outside the official dataset. Contains `Input/` (raw `.png` files) and `Output/` (side-by-side visual validations).
+
+### 4. Configuration
+- **`requirements.txt`**: Strict version pinning for PyTorch, NumPy, SciPy, and Pillow to ensure environment reproducibility.
+- **`.gitignore`**: Prevents the repository from bloating by ignoring large `Dataset/` binaries and `__pycache__/` runtime folders.
 
 ---
 
