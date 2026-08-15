@@ -350,8 +350,9 @@ python evaluate.py \
 
 ```text
 Semicon/
-|-- README.md
-|-- requirements.txt
+|-- README.md                  <- You are here
+|-- requirements.txt           <- Python dependencies
+|-- .gitignore                 <- Prevents large datasets from bloating git
 |
 |-- train.py                   <- Training engine (AMP + Checkpointing)
 |-- evaluate.py                <- Primary inference engine (8-fold TTA)
@@ -363,9 +364,24 @@ Semicon/
 |   |-- model.py               <- NAFNet-SR, SimpleGate, PixelShuffle
 |   |-- loss.py                <- Charbonnier, SSIM, Focal Frequency Loss
 |
-|-- checkpoints/               <- Trained weights (best_model.pt)
-|-- results/                   <- .npy test predictions & training curves
-|-- Chip_Test/                 <- Custom industry image evaluations
+|-- checkpoints/
+|   |-- best_model.pt          <- Peak validation weights (17MB)
+|   |-- final_model.pt         <- End-of-training weights
+|   |-- training_log.csv       <- Epoch-by-epoch loss metrics
+|
+|-- Dataset/                   <- (Ignored in Git due to size constraints)
+|   |-- train/train/
+|   |   |-- GT/                <- 3,200 clean 256x256 ground truth arrays (.npy)
+|   |   |-- NoisyLR/           <- 3,200 degraded 128x128 input arrays (.npy)
+|   |-- NoisyLR/               <- 400 test arrays for official submission
+|
+|-- results/
+|   |-- test_predictions/      <- 400 final 256x256 restored outputs (.npy)
+|   |-- side_by_side/          <- 400 visual "Before/After" PNGs for judges
+|
+|-- Chip_Test/
+|   |-- Input/                 <- Raw real-world .png test images
+|   |-- Output/                <- Restored side-by-side visual validations
 ```
 
 The repository is modularly designed to separate mathematical architecture, data processing, and execution logic.
