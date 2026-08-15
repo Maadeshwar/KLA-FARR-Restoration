@@ -66,12 +66,6 @@ The input images from the KLA dataset suffer from two simultaneous, compounding 
 <br>
 <img src="results/side_by_side/000105.png" alt="Test Sample 000105 — Noisy Input vs Restored Output" width="800"/>
 
-### Custom Industry Image Restoration (Chip_Test Sandbox)
-
-*Real-world semiconductor images restored using the same trained weights.*
-
-<img src="Chip_Test/Output/Semicon_Sample5.png" alt="Chip_Test Sample 5 — Custom Industry Image Restoration" width="800"/>
-
 ---
 
 ## Architecture: NAFNet-SR
