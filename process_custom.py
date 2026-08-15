@@ -5,19 +5,22 @@ import numpy as np
 import sys
 import glob
 
-sys.path.insert(0, 'D:/Semicon')
+# Dynamic base path — works on any machine, any directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, BASE_DIR)
 from src.model import NAFNetSR
 
 def main():
-    input_dir = 'D:/Semicon/Chip_Test/Input'
-    output_dir = 'D:/Semicon/Chip_Test/Output'
+    input_dir  = os.path.join(BASE_DIR, 'Chip_Test', 'Input')
+    output_dir = os.path.join(BASE_DIR, 'Chip_Test', 'Output')
     os.makedirs(output_dir, exist_ok=True)
 
     # 1. Load the model
     print("Loading AI Model...")
-    device = torch.device('cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = NAFNetSR(img_channel=1, width=32, enc_blk_nums=[2, 2, 4], middle_blk_num=6, dec_blk_nums=[4, 2, 2], upscale=2)
-    checkpoint = torch.load('D:/Semicon/checkpoints/best_model.pt', map_location=device)
+    weights_path = os.path.join(BASE_DIR, 'checkpoints', 'best_model.pt')
+    checkpoint = torch.load(weights_path, map_location=device)
     model.load_state_dict(checkpoint['model_state_dict'] if 'model_state_dict' in checkpoint else checkpoint)
     model.eval()
 
