@@ -428,6 +428,18 @@ python process_custom.py
 
 ---
 
+## End-to-End Demo Video Script
+
+For presentation and benchmarking purposes, we have included `demo.bat`. Running this single script will execute the entire pipeline end-to-end:
+1. Cleans all previous output directories.
+2. Runs `evaluate.py` with 8-fold TTA on the hidden test set.
+3. Runs `visualize_test.py` to generate side-by-side visual proofs.
+4. Runs `process_custom.py` to restore out-of-distribution real-world chip imagery.
+
+```bash
+.\demo.bat
+```
+
 ## Repository Structure and Pipeline Architecture
 
 ```text
@@ -435,6 +447,7 @@ Semicon/
 |-- README.md                        <- Project documentation
 |-- requirements.txt                 <- Python dependency versions
 |-- .gitignore                       <- Excludes Dataset/ and __pycache__
+|-- demo.bat                         <- End-to-end pipeline execution for video demo
 |
 |-- train.py                         <- Training engine (AdamW, AMP, cosine LR, checkpointing)
 |-- evaluate.py                      <- Official submission engine (8-fold TTA, .npy output)
