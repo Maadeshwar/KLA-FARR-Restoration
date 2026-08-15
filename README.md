@@ -4,6 +4,7 @@
 
 ### *Simultaneous Multiplicative Speckle Denoising and 2x Spatial Super-Resolution*
 ### *via Fourier-Domain Optimization and Geometric Test-Time Augmentation*
+### *Fully Flexible Upscale Factor — 2x | 4x | 8x with a Single Parameter Change*
 
 <br>
 
@@ -145,6 +146,32 @@ Output (B x 1 x 256 x 256)
 ```
 
 **Global Residual Design:** The bicubic upscale of the input is added directly to the network output. This means the network only needs to learn the high-frequency residual (the noise suppression and edge recovery), not the full low-frequency image reconstruction. This significantly accelerates convergence.
+
+### Architecture Flexibility — Changing the Upscale Factor
+
+The `upscale` parameter in `NAFNetSR` is the **only thing that needs to change** to target a completely different output resolution. The entire PixelShuffle SR head, the global bicubic residual, and the output padding crop all derive from this single value automatically.
+
+| Input | `upscale` | Output | Use Case |
+|---|---|---|---|
+| 128 × 128 | `2` | **256 × 256** | Current KLA hackathon task |
+| 128 × 128 | `4` | **512 × 512** | If GT is 512×512 |
+| 128 × 128 | `8` | **1024 × 1024** | Ultra-high-resolution restoration |
+| 256 × 256 | `2` | **512 × 512** | Higher-res input variant |
+
+**To retrain for 4× super-resolution (512×512 output):**
+
+```python
+# train.py — change one argument:
+model = NAFNetSR(img_channel=1, width=32,
+                 enc_blk_nums=[2, 2, 4],
+                 middle_blk_num=6,
+                 dec_blk_nums=[4, 2, 2],
+                 upscale=4)   # <-- was 2, now 4
+```
+
+> **No other code changes are required.** The `ending` head automatically projects to `img_channel × upscale²` channels before PixelShuffle, the global bicubic residual scales to match, and the output crop trims to exactly `H × upscale` × `W × upscale`. The only requirement is that your GT training images must be at the new target resolution (e.g. 512×512 for `upscale=4`).
+
+> **This is architecturally possible because** all upsampling in the SR head is done via `PixelShuffle(upscale)`, which is a learned pixel rearrangement — not a fixed interpolation. The network learns the optimal upsampling kernel end-to-end for whatever scale factor you provide.
 
 ### NAFBlock Internal Structure
 
