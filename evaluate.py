@@ -50,7 +50,7 @@ def tta_forward(model, lr_tensor):
 
             # Forward pass
             with torch.amp.autocast('cuda', enabled=torch.cuda.is_available()):
-                pred = model(x)
+                pred = model(x).clone()
 
             # Reverse transform on output
             if rot > 0:
