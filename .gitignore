@@ -2,10 +2,7 @@
 Dataset/
 Image/
 
-# Model checkpoints
-checkpoints/
-*.pt
-*.pth
+
 
 # Python caches
 __pycache__/
