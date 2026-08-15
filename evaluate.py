@@ -65,12 +65,15 @@ def tta_forward(model, lr_tensor):
 
 
 def main():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    default_weights = os.path.join(base_dir, 'checkpoints', 'best_model.pt')
+    
     parser = argparse.ArgumentParser(description='KLA Semiconductor Image Restoration - Evaluation')
     parser.add_argument('--input_dir', type=str, required=True,
                         help='Directory containing degraded .npy test images')
     parser.add_argument('--output_dir', type=str, required=True,
                         help='Directory to save restored .npy images')
-    parser.add_argument('--model_weights', type=str, default='checkpoints/best_model.pt',
+    parser.add_argument('--model_weights', type=str, default=default_weights,
                         help='Path to trained model weights (.pt file)')
     parser.add_argument('--no_tta', action='store_true',
                         help='Disable TTA for faster inference (lower quality)')
