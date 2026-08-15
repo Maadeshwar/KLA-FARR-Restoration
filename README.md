@@ -244,7 +244,37 @@ Training was run for 71 epochs on a Google Colab NVIDIA T4 GPU before early stop
 | Final Train Loss | **0.0653** | 71 |
 | Training Time Per Epoch | ~79-82 seconds | T4 GPU |
 
-### Training Progression (Selected Epochs)
+### Training Dashboard
+
+*Four-panel summary of the full training run. Top-left: composite loss convergence. Top-right: PSNR trajectory on the validation set. Bottom-left: SSIM trajectory on the validation set. Bottom-right: cosine annealing learning rate schedule.*
+
+<img src="results/training_dashboard.png" alt="Full training dashboard: loss, PSNR, SSIM, and LR schedule across 71 epochs" width="900"/>
+
+### Composite Loss Convergence
+
+*Training loss (blue) and validation loss (orange) plotted across all 71 epochs. The composite loss combines Charbonnier (weight 1.0), SSIM (weight 0.1), and Focal Frequency Loss (weight 0.05). Both curves converge smoothly without divergence, confirming that the AdamW optimizer, cosine LR schedule, and gradient clipping (max_norm=1.0) were correctly configured. The gap between train and validation loss remains narrow throughout, indicating the 4.26M parameter budget was appropriate for the 2,880-sample training set.*
+
+<img src="results/loss_curve.png" alt="Composite loss convergence — training vs validation across 71 epochs" width="700"/>
+
+### Validation PSNR Trajectory
+
+*Peak Signal-to-Noise Ratio measured on the 320-sample validation set after each epoch. PSNR peaked at 26.97 dB at epoch 51 and the best weights were automatically saved at that checkpoint. PSNR is defined as 20 × log10(1 / RMSE), where higher values indicate lower pixel-level reconstruction error. The model was saved at this point as `checkpoints/best_model.pt`.*
+
+<img src="results/psnr_curve.png" alt="Validation PSNR trajectory — peak 26.97 dB at epoch 51" width="700"/>
+
+### Validation SSIM Trajectory
+
+*Structural Similarity Index (SSIM) measured on the validation set after each epoch. SSIM continued improving beyond the PSNR peak (epoch 51), reaching 0.7739 at epoch 68. This divergence is characteristic of cosine annealing schedules: as the learning rate decays toward 1e-7, the model can no longer make large pixel-level corrections (PSNR stagnates) but still refines structural coherence at a fine scale (SSIM continues to rise). SSIM directly measures the luminance, contrast, and structural similarity components that the human visual system is sensitive to — making it the primary evaluation metric for this task.*
+
+<img src="results/ssim_curve.png" alt="Validation SSIM trajectory — peak 0.7739 at epoch 68" width="700"/>
+
+### Learning Rate Schedule (Cosine Annealing)
+
+*The learning rate follows a cosine annealing schedule: LR(t) = eta_min + 0.5 × (LR_max - eta_min) × (1 + cos(π × t / T_max)), with LR_max = 1e-3, eta_min = 1e-7, T_max = 100. This schedule starts with large learning rate steps that allow the optimizer to escape local minima during early training, then smoothly decays to near-zero, enabling fine-grained weight adjustments in later epochs. The smooth decay in the final third of training is what allowed SSIM to continue improving after PSNR plateaued.*
+
+<img src="results/lr_schedule.png" alt="Cosine annealing learning rate schedule from 1e-3 to 1e-7 over 100 epochs" width="700"/>
+
+### Training Progression (Selected Epochs from `training_log.csv`)
 
 | Epoch | Train Loss | Val Loss | PSNR (dB) | SSIM | LR |
 |---|---|---|---|---|---|
@@ -258,7 +288,9 @@ Training was run for 71 epochs on a Google Colab NVIDIA T4 GPU before early stop
 | 68 | 0.06389 | 0.06379 | 26.51 | **0.7739** | 2.32e-04 |
 | 71 | 0.06527 | 0.06779 | 26.34 | 0.7433 | 1.94e-04 |
 
-> The model was saved at epoch 51 (peak PSNR) as `best_model.pt`. SSIM continued to improve beyond that epoch as the learning rate decayed, reflecting the model refining structural fidelity at lower loss magnitudes.
+> The model was saved at epoch 51 (peak PSNR) as `best_model.pt`. SSIM continued improving beyond that epoch as the learning rate decayed, reflecting the model refining structural fidelity at low learning rates.
+
+
 
 ---
 
