@@ -24,7 +24,7 @@ Output (Restored):  256 x 256  |  Float32  |  Range: [0.00,  1.00]  |  Denoised,
 
 ---
 
-## ⚡ Quick Start for Judges (How to Run)
+## Quick Start for Judges (How to Run)
 
 To benchmark our model on the KLA H100 GPU as per the hackathon rules, you only need to run the `evaluate.py` script. It has been built to run completely **AS-IS with zero manual edits**.
 
