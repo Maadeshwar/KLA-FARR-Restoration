@@ -24,6 +24,28 @@ Output (Restored):  256 x 256  |  Float32  |  Range: [0.00,  1.00]  |  Denoised,
 
 ---
 
+## ⚡ Quick Start for Judges (How to Run)
+
+To benchmark our model on the KLA H100 GPU as per the hackathon rules, you only need to run the `evaluate.py` script. It has been built to run completely **AS-IS with zero manual edits**.
+
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Run the official benchmarking inference script
+python evaluate.py \
+    --input_dir <path_to_hidden_test_NoisyLR_images> \
+    --output_dir <path_to_save_restored_outputs> \
+    --model_weights checkpoints/best_model.pt
+```
+
+**Key Features of this execution:**
+- Output format is pure `.npy` (float32, perfectly clamped to `[0.0, 1.0]`).
+- Automatically leverages `torch.compile` and FP16 `amp.autocast` if an H100 GPU is detected for maximum throughput.
+- Automatically applies our 8-fold geometric Test-Time Augmentation (TTA) for maximum PSNR.
+
+---
+
 ## Table of Contents
 1. [Problem Statement](#problem-statement)
 2. [Visual Results](#visual-results)
