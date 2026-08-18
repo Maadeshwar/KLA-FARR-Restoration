@@ -32,10 +32,7 @@ To benchmark our model on the KLA H100 GPU as per the hackathon rules, you only 
 pip install -r requirements.txt
 
 # 2. Run the official benchmarking inference script
-python evaluate.py \
-    --input_dir <path_to_hidden_test_NoisyLR_images> \
-    --output_dir <path_to_save_restored_outputs> \
-    --model_weights checkpoints/best_model.pt
+python run.py <input-dir> <output-dir>
 ```
 
 **Key Features of this execution:**
@@ -444,10 +441,7 @@ python train.py \
 ## Evaluation and Submission
 
 ```bash
-python evaluate.py \
-    --input_dir path/to/test/NoisyLR \
-    --output_dir path/to/submission/output \
-    --model_weights checkpoints/best_model.pt
+python run.py path/to/test/NoisyLR path/to/submission/output
 ```
 
 **Output format:**
@@ -497,8 +491,9 @@ Semicon/
 |-- .gitignore                       <- Excludes Dataset/ and __pycache__
 |-- demo.bat                         <- End-to-end pipeline execution for video demo
 |
+|-- run.py                           <- Official KLA benchmarking entry script
 |-- train.py                         <- Training engine (AdamW, AMP, cosine LR, checkpointing)
-|-- evaluate.py                      <- Official submission engine (8-fold TTA, .npy output)
+|-- evaluate.py                      <- Core inference engine (8-fold TTA, AMP, compilation)
 |-- visualize_test.py                <- Converts .npy predictions to side-by-side .png visuals
 |-- process_custom.py                <- Inference on custom .png images (CPU, no TTA)
 |
@@ -506,6 +501,9 @@ Semicon/
 |   |-- model.py                     <- NAFNetSR: encoder-bottleneck-decoder + PixelShuffle SR head
 |   |-- dataset.py                   <- SemiconDataset: .npy loading, augmentation, train/val split
 |   |-- loss.py                      <- CombinedLoss: Charbonnier + SSIM + FocalFrequency
+|
+|-- models/
+|   |-- best_model.pt                <- Weights deployed for benchmarking
 |
 |-- checkpoints/
 |   |-- best_model.pt                <- Weights at peak validation PSNR (epoch 51, 4.26M params)
