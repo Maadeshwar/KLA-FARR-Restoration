@@ -487,9 +487,12 @@ For presentation and benchmarking purposes, we have included `demo.bat`. Running
 ```text
 MAAVForge/
 |-- README.md                        <- Project documentation
+|-- MAAVForge_KLA_PS01.pptx          <- Official Presentation Deck
 |-- requirements.txt                 <- Python dependency versions
 |-- .gitignore                       <- Excludes Dataset/ and __pycache__
 |-- demo.bat                         <- End-to-end pipeline execution for video demo
+|
+|-- Chip_Test/                       <- Real-world custom inference images
 |
 |-- run.py                           <- Official KLA benchmarking entry script
 |-- train.py                         <- Training engine (AdamW, AMP, cosine LR, checkpointing)
