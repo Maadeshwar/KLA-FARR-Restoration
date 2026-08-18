@@ -7,11 +7,11 @@
 
 </div>
 
-## 📌 Submission Navigation
+## Submission Navigation
 
 Welcome! To comply strictly with the KLA automated grading requirements, our entire codebase, models, and technical documentation are securely located inside the designated team folder.
 
-### 👉 [Click here to enter the `MAAVForge` directory and view the full documentation](./MAAVForge)
+### [Click here to enter the `MAAVForge` directory and view the full documentation](./MAAVForge)
 
 <br>
 
