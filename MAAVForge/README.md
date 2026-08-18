@@ -485,7 +485,7 @@ For presentation and benchmarking purposes, we have included `demo.bat`. Running
 ## Repository Structure and Pipeline Architecture
 
 ```text
-Semicon/
+MAAVForge/
 |-- README.md                        <- Project documentation
 |-- requirements.txt                 <- Python dependency versions
 |-- .gitignore                       <- Excludes Dataset/ and __pycache__
